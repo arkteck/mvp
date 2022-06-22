@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 
 const today = new Date();
 const todayString = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate()}`;
+const randomColor = () => (`hsl(${Math.floor(Math.random() * 360)}, ${Math.floor(Math.random() * 31) + 70}%, ${Math.floor(Math.random() * 21) + 40}%)`);
 
 function TimeInput({
   timeData, setTimeData, labels, setLabels,
@@ -21,13 +22,11 @@ function TimeInput({
       <input
         type="date"
         value={startDate}
-        placeholder="Event"
         onChange={(e) => { setStartDate(e.target.value); }}
       />
       <input
         type="date"
         value={endDate}
-        placeholder="Event"
         onChange={(e) => { setEndDate(e.target.value); }}
       />
       <button
@@ -36,10 +35,9 @@ function TimeInput({
           if (event.length) {
             const newTimeData = [...timeData];
             newTimeData.push({
-              event,
               startDate,
               endDate,
-              backgroundColor: `hsl(${Math.floor(Math.random() * 360)}, ${Math.floor(Math.random() * 31) + 70}%, ${Math.floor(Math.random() * 21) + 40}%)`,
+              backgroundColor: randomColor(),
             });
             const newLabels = [...labels];
             newLabels.push(event);

@@ -14,7 +14,12 @@ function App() {
         labels={labels}
         setLabels={setLabels}
       />
-      <TimelineChart timeData={timeData} labels={labels} />
+      <TimelineChart
+        timeData={timeData}
+        setTimeData={setTimeData}
+        labels={labels}
+        setLabels={setLabels}
+      />
     </>
   );
 }
