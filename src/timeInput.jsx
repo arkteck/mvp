@@ -1,9 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
-function TimeInput({ timeData, setTimeData }) {
+const today = new Date();
+const todayString = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate()}`;
+
+function TimeInput({
+  timeData, setTimeData, labels, setLabels,
+}) {
   const [event, setEvent] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [startDate, setStartDate] = useState(todayString);
+  const [endDate, setEndDate] = useState(todayString);
 
   return (
     <>
@@ -28,16 +33,21 @@ function TimeInput({ timeData, setTimeData }) {
       <button
         type="button"
         onClick={() => {
-          const newTimeData = [...timeData];
-          newTimeData.push({
-            event,
-            startDate,
-            endDate,
-          });
-          setEvent('');
-          setStartDate('');
-          setEndDate('');
-          setTimeData(newTimeData);
+          if (event.length) {
+            const newTimeData = [...timeData];
+            newTimeData.push({
+              event,
+              startDate,
+              endDate,
+            });
+            const newLabels = [...labels];
+            newLabels.push(event);
+            setEvent('');
+            setStartDate(todayString);
+            setEndDate(todayString);
+            setLabels(newLabels);
+            setTimeData(newTimeData);
+          }
         }}
       >
         Submit
