@@ -12,6 +12,14 @@ import {
 import { Bar } from 'react-chartjs-2';
 import Zoom from 'chartjs-plugin-zoom';
 import 'chartjs-adapter-date-fns';
+import styled from 'styled-components';
+
+const TimelineDiv = styled.div`
+  width: 80%;
+  height: 80%;
+  margin: 10px;
+  padding: 10px;
+`;
 
 const options = {
   indexAxis: 'y',
@@ -22,11 +30,7 @@ const options = {
   },
   plugins: {
     legend: {
-      position: 'right',
-    },
-    title: {
-      display: true,
-      text: 'Chart.js Horizontal Bar Chart',
+      display: false,
     },
     zoom: {
       limits: {
@@ -44,7 +48,7 @@ const options = {
     tooltip: {
       enabled: true,
       callbacks: {
-        label: ({ raw }) => (`${raw[0]} - ${raw[1]}`),
+        label: ({ raw }) => (`${raw[0]} - ${raw[1].substring(0, raw[1].indexOf(' '))}`),
       },
     },
   },
@@ -72,7 +76,7 @@ function TimelineChart({ timeData, labels }) {
     let maxDate = Date.now();
     timeData.forEach((entry) => {
       const startDate = new Date(entry.startDate);
-      const endDate = new Date(entry.endDate);
+      const endDate = new Date(`${entry.endDate} 23:59:59`);
       if (startDate < minDate) {
         minDate = startDate;
       }
@@ -102,10 +106,12 @@ function TimelineChart({ timeData, labels }) {
   }, [timeData]);
 
   return (
-    <Bar
-      data={data}
-      options={options}
-    />
+    <TimelineDiv>
+      <Bar
+        data={data}
+        options={options}
+      />
+    </TimelineDiv>
   );
 }
 
