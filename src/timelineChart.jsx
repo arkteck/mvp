@@ -43,10 +43,10 @@ const options = {
     },
     zoom: {
       limits: {
-        x: { min: 'original', max: 'original' },
+        x: { min: 'original', max: 'original', minRange: 86400000 },
         y: { min: 'original', max: 'original' },
       },
-      pan: { enabled: true, mode: 'xy', threshold: 10 },
+      pan: { enabled: true, mode: 'x', threshold: 10 },
       zoom: {
         mode: 'x',
         wheel: {
