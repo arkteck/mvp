@@ -21,11 +21,13 @@ const TimelineDiv = styled.div`
   padding: 10px;
 `;
 
+Tooltip.positioners.cursor = (elem, coordinates) => (coordinates);
+
 const options = {
   indexAxis: 'y',
   elements: {
     bar: {
-      borderWidth: 2,
+      borderWidth: 0,
     },
   },
   plugins: {
@@ -47,6 +49,7 @@ const options = {
     },
     tooltip: {
       enabled: true,
+      position: 'cursor',
       callbacks: {
         label: ({ raw }) => (`${raw[0]} - ${raw[1].substring(0, raw[1].indexOf(' '))}`),
       },
@@ -72,6 +75,7 @@ function TimelineChart({ timeData, labels }) {
 
   useEffect(() => {
     const data2 = [];
+    const backgroundColor = [];
     let minDate = Date.now();
     let maxDate = Date.now();
     timeData.forEach((entry) => {
@@ -84,12 +88,19 @@ function TimelineChart({ timeData, labels }) {
         maxDate = endDate;
       }
       data2.push([entry.startDate, `${entry.endDate} 23:59:59`]);
+      backgroundColor.push(entry.backgroundColor);
     });
     options.scales = {
       x: {
         type: 'time',
         min: minDate,
         max: maxDate,
+        time: {
+          minUnit: 'day',
+          displayFormats: {
+            day: 'MMM d yyyy',
+          },
+        },
       },
     };
     setData({
@@ -98,8 +109,7 @@ function TimelineChart({ timeData, labels }) {
         {
           label: 'Events',
           data: data2,
-          backgroundColor: 'rgba(255, 99, 132, 1)',
-          borderColor: 'rgb(255, 99, 132)',
+          backgroundColor,
         },
       ],
     });

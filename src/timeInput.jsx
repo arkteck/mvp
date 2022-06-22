@@ -39,6 +39,7 @@ function TimeInput({
               event,
               startDate,
               endDate,
+              backgroundColor: `hsl(${Math.floor(Math.random() * 360)}, ${Math.floor(Math.random() * 31) + 70}%, ${Math.floor(Math.random() * 21) + 40}%)`,
             });
             const newLabels = [...labels];
             newLabels.push(event);
