@@ -66,7 +66,15 @@ const options = {
   },
 };
 
-const randomColor = () => (`hsl(${Math.floor(Math.random() * 360)}, ${Math.floor(Math.random() * 31) + 70}%, ${Math.floor(Math.random() * 21) + 40}%)`);
+function hslToHex(h, s, l) {
+  const a = (s * Math.min(l / 100, 1 - l / 100)) / 100;
+  const f = (n) => {
+    const k = (n + h / 30) % 12;
+    const clr = l / 100 - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+    return Math.round(255 * clr).toString(16).padStart(2, '0');
+  };
+  return `#${f(0)}${f(8)}${f(4)}`;
+}
 
 function TimelineChart({
   timeData, setTimeData, labels, setLabels,
@@ -77,7 +85,7 @@ function TimelineChart({
   const [editStartDate, setEditStartDate] = useState('');
   const [editEndDate, setEditEndDate] = useState('');
   const [index, setIndex] = useState(0);
-  const [editData, setEditData] = useState({});
+  const [color, setColor] = useState('');
   const chartRef = useRef();
 
   ChartJS.register(
@@ -98,9 +106,13 @@ function TimelineChart({
       setEditEvent(labels[element[0].index]);
       setEditStartDate(timeData[element[0].index].startDate);
       setEditEndDate(timeData[element[0].index].endDate);
+      let clr = timeData[element[0].index].backgroundColor;
+      if (clr[0] === 'h') {
+        const match = clr.match(/\d+/g);
+        clr = hslToHex(Number(match[0]), Number(match[1]), Number(match[2]));
+      }
+      setColor(clr);
       setEdit(true);
-      // newTimeData[element[0].index].backgroundColor = randomColor();
-      // setTimeData(newTimeData);
     } else {
       setEdit(false);
     }
@@ -176,6 +188,11 @@ function TimelineChart({
             value={editEndDate}
             onChange={(e) => { setEditEndDate(e.target.value); }}
           />
+          <input
+            type="color"
+            value={color}
+            onChange={(e) => { setColor(e.target.value); }}
+          />
           <button
             type="button"
             onClick={() => {
@@ -183,6 +200,7 @@ function TimelineChart({
                 const newTimeData = [...timeData];
                 newTimeData[index].startDate = editStartDate;
                 newTimeData[index].endDate = editEndDate;
+                newTimeData[index].backgroundColor = color;
                 const newLabels = [...labels];
                 newLabels[index] = editEvent;
                 setLabels(newLabels);
