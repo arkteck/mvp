@@ -4,7 +4,8 @@
   "description": "MVP for Hack Reactor RFE2204",
   "main": "index.js",
   "scripts": {
-    "start": "webpack --mode=development --watch",
+    "start": "node server/",
+    "webpack": "webpack --mode=development --watch",
     "build": "webpack --mode=production",
     "dev": "webpack serve --open",
     "server": "nodemon --watch server server/"
