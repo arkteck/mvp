@@ -15,6 +15,7 @@ import 'chartjs-adapter-date-fns';
 import styled from '@emotion/styled';
 import { Button, TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import axios from 'axios';
 
 const TimelineDiv = styled.div`
   position: relative;
@@ -219,12 +220,19 @@ function TimelineChart({
                   const newTimeData = [...timeData];
                   newTimeData[index].startDate = editStartDate;
                   newTimeData[index].endDate = editEndDate;
+                  newTimeData[index].event = editEvent;
                   // newTimeData[index].backgroundColor = color;
                   const newLabels = [...labels];
                   newLabels[index] = editEvent;
-                  setLabels(newLabels);
-                  setTimeData(newTimeData);
-                  setEdit(false);
+                  axios.patch('/editEvent', newTimeData[index])
+                    .then(() => {
+                      setLabels(newLabels);
+                      setTimeData(newTimeData);
+                      setEdit(false);
+                    })
+                    .catch((err) => {
+                      console.log(err);
+                    });
                 } else if (editEventRef.current) {
                   setHelper(true);
                   editEventRef.current.focus();

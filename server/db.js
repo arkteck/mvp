@@ -30,6 +30,20 @@ exports.addEvent = (req, res) => {
   const newEvent = { ...req.body };
   newEvent.sessionID = req.sessionID;
   Timeline.create(newEvent)
+    .then((response) => {
+      res.status(200).send(response);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).send(err);
+    });
+};
+
+exports.editEvent = (req, res) => {
+  const newEvent = { ...req.body };
+  const id = newEvent._id;
+  delete newEvent._id;
+  Timeline.findByIdAndUpdate(id, newEvent)
     .then(() => {
       res.sendStatus(200);
     })

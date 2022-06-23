@@ -12,7 +12,6 @@ function App() {
   useEffect(() => {
     axios.get('/getEvents')
       .then((res) => {
-        console.log(res);
         const newTimeData = [];
         const newLabels = [];
         res.data.forEach((a) => {
@@ -20,6 +19,8 @@ function App() {
             startDate: new Date(a.startDate),
             endDate: new Date(a.endDate),
             backgroundColor: a.backgroundColor,
+            event: a.event,
+            _id: a._id,
           });
           newLabels.push(a.event);
         });

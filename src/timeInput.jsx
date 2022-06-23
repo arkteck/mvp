@@ -62,25 +62,28 @@ function TimeInput({
             if (event.length && endDate - startDate >= 0) {
               setHelper(false);
               setHelper2(false);
-              const newTimeData = [...timeData];
               const newData = {
                 startDate,
                 endDate,
                 backgroundColor: randomColor(),
               };
-              newTimeData.push(newData);
-              const newLabels = [...labels];
-              newLabels.push(event);
               newData.event = event;
               axios.post('/addEvent', newData)
+                .then((res) => {
+                  const newTimeData = [...timeData];
+                  const newLabels = [...labels];
+                  newData._id = res.data._id;
+                  newTimeData.push(newData);
+                  newLabels.push(event);
+                  setLabels(newLabels);
+                  setTimeData(newTimeData);
+                })
                 .catch((err) => {
                   console.log(err);
                 });
               // setEvent('');
               // setStartDate(today);
               // setEndDate(today);
-              setLabels(newLabels);
-              setTimeData(newTimeData);
             } else {
               if (event.length === 0) {
                 if (eventRef.current) {
