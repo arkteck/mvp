@@ -30,11 +30,8 @@ app.get('*.js', (req, res, next) => {
   next();
 });
 
-app.get('/loadSession', (req, res) => {
-  console.log(req.sessionID);
-  console.log(req.session.id);
-  res.send(req.cookies);
-});
+app.get('/getEvents', db.getEvents);
+app.post('/addEvent', db.addEvent);
 
 app.listen(process.env.PORT);
 console.log(`Listening at http://localhost:${process.env.PORT}`);

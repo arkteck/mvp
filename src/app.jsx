@@ -10,9 +10,21 @@ function App() {
   const [labels, setLabels] = useState([]);
 
   useEffect(() => {
-    axios.get('/loadSession')
+    axios.get('/getEvents')
       .then((res) => {
         console.log(res);
+        const newTimeData = [];
+        const newLabels = [];
+        res.data.forEach((a) => {
+          newTimeData.push({
+            startDate: new Date(a.startDate),
+            endDate: new Date(a.endDate),
+            backgroundColor: a.backgroundColor,
+          });
+          newLabels.push(a.event);
+        });
+        setLabels(newLabels);
+        setTimeData(newTimeData);
       })
       .catch((err) => {
         console.log(err);

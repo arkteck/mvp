@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Button, TextField } from '@mui/material';
 import styled from '@emotion/styled';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import axios from 'axios';
 
 const InputDiv = styled.div`
   margin-top: 15px;
@@ -62,13 +63,19 @@ function TimeInput({
               setHelper(false);
               setHelper2(false);
               const newTimeData = [...timeData];
-              newTimeData.push({
+              const newData = {
                 startDate,
                 endDate,
                 backgroundColor: randomColor(),
-              });
+              };
+              newTimeData.push(newData);
               const newLabels = [...labels];
               newLabels.push(event);
+              newData.event = event;
+              axios.post('/addEvent', newData)
+                .catch((err) => {
+                  console.log(err);
+                });
               // setEvent('');
               // setStartDate(today);
               // setEndDate(today);
