@@ -1,8 +1,9 @@
 import React, { useState, useRef } from 'react';
-import { Button, TextField } from '@mui/material';
+import { Button, TextField, Input } from '@mui/material';
 import styled from '@emotion/styled';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import axios from 'axios';
+import Papa from 'papaparse';
 
 const InputDiv = styled.div`
   margin-top: 15px;
@@ -25,6 +26,45 @@ function TimeInput({
   const [helper2, setHelper2] = useState(false);
   const eventRef = useRef();
   const startRef = useRef();
+  const inputRef = useRef();
+
+  const handleUpload = (e) => {
+    const fileObj = e.target.files && e.target.files[0];
+    if (!fileObj) {
+      return;
+    }
+
+    Papa.parse(fileObj, {
+      header: true,
+      complete: (res) => {
+        console.log(res.data);
+        const newTimeData = [...timeData];
+        const newLabels = [...labels];
+        const newEvents = [];
+        res.data.forEach((a) => {
+          const newData = {
+            event: a.event,
+            startDate: new Date(a.startDate),
+            endDate: new Date(a.endDate),
+            backgroundColor: randomColor(),
+          };
+          newTimeData.push(newData);
+          newLabels.push(a.event);
+          newEvents.push(newData);
+        });
+        axios.post('/addEvents', newEvents)
+          .then((resp) => {
+            console.log(resp);
+            setLabels(newLabels);
+            setTimeData(newTimeData);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      },
+    });
+    e.target.value = null;
+  };
 
   return (
     <InputDiv>
@@ -66,8 +106,8 @@ function TimeInput({
                 startDate,
                 endDate,
                 backgroundColor: randomColor(),
+                event,
               };
-              newData.event = event;
               axios.post('/addEvent', newData)
                 .then((res) => {
                   const newTimeData = [...timeData];
@@ -81,9 +121,6 @@ function TimeInput({
                 .catch((err) => {
                   console.log(err);
                 });
-              // setEvent('');
-              // setStartDate(today);
-              // setEndDate(today);
             } else {
               if (event.length === 0) {
                 if (eventRef.current) {
@@ -155,6 +192,24 @@ function TimeInput({
           Reorder
         </Button>
       </span>
+      <span>
+        <Button
+          variant="outlined"
+          onClick={() => {
+            if (inputRef.current) {
+              inputRef.current.click();
+            }
+          }}
+        >
+          Add from CSV
+        </Button>
+      </span>
+      <input
+        style={{ display: 'none' }}
+        ref={inputRef}
+        type="file"
+        onChange={handleUpload}
+      />
     </InputDiv>
   );
 }

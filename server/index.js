@@ -32,6 +32,7 @@ app.get('*.js', (req, res, next) => {
 
 app.get('/getEvents', db.getEvents);
 app.post('/addEvent', db.addEvent);
+app.post('/addEvents', db.addEvents);
 app.patch('/editEvent', db.editEvent);
 app.delete('/deleteEvent', db.deleteEvent);
 

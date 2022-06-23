@@ -39,6 +39,19 @@ exports.addEvent = (req, res) => {
     });
 };
 
+exports.addEvents = (req, res) => {
+  let newEvents = [...req.body];
+  newEvents = newEvents.map((ev) => { ev.sessionID = req.sessionID; return ev; });
+  Timeline.create(newEvents)
+    .then((response) => {
+      res.status(200).send(response);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).send(err);
+    });
+};
+
 exports.editEvent = (req, res) => {
   const newEvent = { ...req.body };
   const id = newEvent._id;
