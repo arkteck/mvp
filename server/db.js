@@ -52,3 +52,14 @@ exports.editEvent = (req, res) => {
       res.status(500).send(err);
     });
 };
+
+exports.deleteEvent = (req, res) => {
+  Timeline.findByIdAndDelete(req.body._id)
+    .then(() => {
+      res.sendStatus(200);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).send(err);
+    });
+};

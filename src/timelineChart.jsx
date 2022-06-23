@@ -239,7 +239,27 @@ function TimelineChart({
                 }
               }}
             >
-              Submit
+              Edit
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={() => {
+                axios.delete('/deleteEvent', { data: timeData[index] })
+                  .then(() => {
+                    const newTimeData = [...timeData];
+                    const newLabels = [...labels];
+                    newTimeData.splice(index, 1);
+                    newLabels.splice(index, 1);
+                    setLabels(newLabels);
+                    setTimeData(newTimeData);
+                    setEdit(false);
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                  });
+              }}
+            >
+              Delete
             </Button>
           </div>
           {/* <input
