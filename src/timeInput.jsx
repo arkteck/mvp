@@ -51,6 +51,7 @@ function TimeInput({
         <Button
           variant="contained"
           onClick={() => {
+            console.log(startDate, endDate);
             if (event.length) {
               const newTimeData = [...timeData];
               newTimeData.push({

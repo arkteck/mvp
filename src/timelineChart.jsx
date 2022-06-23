@@ -67,6 +67,9 @@ const options = {
   },
 };
 
+const convertStart = (d) => (`${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2, '0')}-${(d.getDate()).toString().padStart(2, '0')}`);
+const convertEnd = (d) => (`${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2, '0')}-${(d.getDate()).toString().padStart(2, '0')} 23:59:00`);
+
 function hslToHex(h, s, l) {
   const a = (s * Math.min(l / 100, 1 - l / 100)) / 100;
   const f = (n) => {
@@ -126,15 +129,13 @@ function TimelineChart({
     let maxDate = Date.now();
 
     timeData.forEach((entry) => {
-      const startDate = entry.startDate;
-      const endDate = entry.endDate;
-      if (startDate < minDate) {
-        minDate = startDate;
+      if (entry.startDate < minDate) {
+        minDate = entry.startDate;
       }
-      if (endDate > maxDate) {
-        maxDate = endDate;
+      if (entry.endDate > maxDate) {
+        maxDate = entry.endDate;
       }
-      data2.push([entry.startDate, entry.endDate]);
+      data2.push([convertStart(entry.startDate), convertEnd(entry.endDate)]);
       backgroundColor.push(entry.backgroundColor);
     });
 
@@ -142,7 +143,7 @@ function TimelineChart({
       x: {
         type: 'time',
         min: minDate,
-        max: maxDate,
+        max: maxDate + 86400000,
         time: {
           minUnit: 'day',
           displayFormats: {
