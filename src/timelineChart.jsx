@@ -13,7 +13,8 @@ import { Bar, getElementAtEvent } from 'react-chartjs-2';
 import Zoom from 'chartjs-plugin-zoom';
 import 'chartjs-adapter-date-fns';
 import styled from '@emotion/styled';
-import { Button, Input } from '@mui/material';
+import { Button, TextField } from '@mui/material';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 const TimelineDiv = styled.div`
   position: relative;
@@ -27,6 +28,13 @@ const EditModal = styled.div`
   position: absolute;
   top: 50%;
   left: 50%;
+  background-color: rgba(255, 255, 255, .8);
+  box-shadow: 0px 0px 8px 8px rgba(255, 255, 255, .8);
+  border-radius: 25px;
+  padding: 15px;
+  > * {
+    margin: 10px
+  }
 `;
 
 Tooltip.positioners.cursor = (elem, coordinates) => (coordinates);
@@ -88,7 +96,9 @@ function TimelineChart({
   const [editEndDate, setEditEndDate] = useState('');
   const [index, setIndex] = useState(0);
   const [color, setColor] = useState('');
+  const [helper, setHelper] = useState(false);
   const chartRef = useRef();
+  const editEventRef = useRef();
 
   ChartJS.register(
     CategoryScale,
@@ -140,7 +150,7 @@ function TimelineChart({
     options.scales = {
       x: {
         type: 'time',
-        min: minDate.valueOf(),
+        min: minDate.valueOf() - 86400000,
         max: maxDate.valueOf() + 86400000,
         time: {
           minUnit: 'day',
@@ -173,44 +183,61 @@ function TimelineChart({
       />
       {edit ? (
         <EditModal>
-          <input
-            type="text"
-            value={editEvent}
-            onChange={(e) => { setEditEvent(e.target.value); }}
-          />
-          <input
-            type="date"
-            value={editStartDate}
-            onChange={(e) => { setEditStartDate(e.target.value); }}
-          />
-          <input
-            type="date"
-            value={editEndDate}
-            onChange={(e) => { setEditEndDate(e.target.value); }}
-          />
-          <input
+          <span>
+            <TextField
+              variant="outlined"
+              label="Event"
+              value={editEvent}
+              inputRef={editEventRef}
+              onChange={(e) => { setEditEvent(e.target.value); }}
+              helperText={helper ? 'Please enter an event.' : ''}
+            />
+          </span>
+          <span>
+            <DatePicker
+              label="Start Date"
+              renderInput={(params) => <TextField {...params} />}
+              value={editStartDate}
+              onChange={(d) => { setEditStartDate(d); }}
+            />
+          </span>
+          <span>
+            <DatePicker
+              label="End Date"
+              renderInput={(params) => <TextField {...params} />}
+              value={editEndDate}
+              onChange={(d) => { setEditEndDate(d); }}
+            />
+          </span>
+          <span>
+            <Button
+              variant="contained"
+              onClick={() => {
+                if (editEvent.length) {
+                  setHelper(false);
+                  const newTimeData = [...timeData];
+                  newTimeData[index].startDate = editStartDate;
+                  newTimeData[index].endDate = editEndDate;
+                  // newTimeData[index].backgroundColor = color;
+                  const newLabels = [...labels];
+                  newLabels[index] = editEvent;
+                  setLabels(newLabels);
+                  setTimeData(newTimeData);
+                  setEdit(false);
+                } else if (editEventRef.current) {
+                  setHelper(true);
+                  editEventRef.current.focus();
+                }
+              }}
+            >
+              Submit
+            </Button>
+          </span>
+          {/* <input
             type="color"
             value={color}
             onChange={(e) => { setColor(e.target.value); }}
-          />
-          <button
-            type="button"
-            onClick={() => {
-              if (editEvent.length) {
-                const newTimeData = [...timeData];
-                newTimeData[index].startDate = editStartDate;
-                newTimeData[index].endDate = editEndDate;
-                newTimeData[index].backgroundColor = color;
-                const newLabels = [...labels];
-                newLabels[index] = editEvent;
-                setLabels(newLabels);
-                setTimeData(newTimeData);
-                setEdit(false);
-              }
-            }}
-          >
-            Submit
-          </button>
+          /> */}
         </EditModal>
       ) : null}
     </TimelineDiv>

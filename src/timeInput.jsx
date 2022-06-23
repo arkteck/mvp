@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Button, Input, TextField } from '@mui/material';
+import { Button, TextField } from '@mui/material';
 import styled from '@emotion/styled';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
@@ -11,7 +11,6 @@ const InputDiv = styled.div`
 `;
 
 const today = new Date();
-const todayString = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate()}`;
 const randomColor = () => (`hsl(${Math.floor(Math.random() * 360)}, ${Math.floor(Math.random() * 31) + 70}%, ${Math.floor(Math.random() * 31) + 30}%)`);
 let order = true;
 
@@ -22,7 +21,9 @@ function TimeInput({
   const [startDate, setStartDate] = useState(today);
   const [endDate, setEndDate] = useState(today);
   const [helper, setHelper] = useState(false);
+  const [helper2, setHelper2] = useState(false);
   const eventRef = useRef();
+  const startRef = useRef();
 
   return (
     <InputDiv>
@@ -39,8 +40,9 @@ function TimeInput({
       <span>
         <DatePicker
           label="Start Date"
-          renderInput={(params) => <TextField {...params} />}
+          renderInput={(params) => <TextField {...params} helperText={helper2 ? 'Start date cannot be after end date.' : ''} />}
           value={startDate}
+          inputRef={startRef}
           onChange={(d) => { setStartDate(d); }}
         />
       </span>
@@ -56,8 +58,9 @@ function TimeInput({
         <Button
           variant="contained"
           onClick={() => {
-            if (event.length) {
+            if (event.length && endDate - startDate >= 0) {
               setHelper(false);
+              setHelper2(false);
               const newTimeData = [...timeData];
               newTimeData.push({
                 startDate,
@@ -71,9 +74,22 @@ function TimeInput({
               // setEndDate(today);
               setLabels(newLabels);
               setTimeData(newTimeData);
-            } else if (eventRef.current) {
-              setHelper(true);
-              eventRef.current.focus();
+            } else {
+              if (event.length === 0) {
+                if (eventRef.current) {
+                  setHelper(true);
+                  eventRef.current.focus();
+                }
+              } else {
+                setHelper(false);
+              }
+              if (endDate - startDate < 0) {
+                if (startRef.current) {
+                  setHelper2(true);
+                }
+              } else {
+                setHelper2(false);
+              }
             }
           }}
         >
