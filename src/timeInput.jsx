@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Button, Input, TextField } from '@mui/material';
 import styled from '@emotion/styled';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -12,7 +12,7 @@ const InputDiv = styled.div`
 
 const today = new Date();
 const todayString = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate()}`;
-const randomColor = () => (`hsl(${Math.floor(Math.random() * 360)}, ${Math.floor(Math.random() * 31) + 70}%, ${Math.floor(Math.random() * 21) + 40}%)`);
+const randomColor = () => (`hsl(${Math.floor(Math.random() * 360)}, ${Math.floor(Math.random() * 31) + 70}%, ${Math.floor(Math.random() * 31) + 40}%)`);
 
 function TimeInput({
   timeData, setTimeData, labels, setLabels,
@@ -20,6 +20,8 @@ function TimeInput({
   const [event, setEvent] = useState('');
   const [startDate, setStartDate] = useState(today);
   const [endDate, setEndDate] = useState(today);
+  const [helper, setHelper] = useState(false);
+  const eventRef = useRef();
 
   return (
     <InputDiv>
@@ -28,7 +30,9 @@ function TimeInput({
           variant="outlined"
           label="Event"
           value={event}
+          inputRef={eventRef}
           onChange={(e) => { setEvent(e.target.value); }}
+          helperText={helper ? 'Please enter an event.' : ''}
         />
       </span>
       <span>
@@ -51,8 +55,8 @@ function TimeInput({
         <Button
           variant="contained"
           onClick={() => {
-            console.log(startDate, endDate);
             if (event.length) {
+              setHelper(false);
               const newTimeData = [...timeData];
               newTimeData.push({
                 startDate,
@@ -66,6 +70,9 @@ function TimeInput({
               // setEndDate(today);
               setLabels(newLabels);
               setTimeData(newTimeData);
+            } else if (eventRef.current) {
+              setHelper(true);
+              eventRef.current.focus();
             }
           }}
         >
