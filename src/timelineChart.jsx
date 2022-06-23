@@ -12,7 +12,8 @@ import {
 import { Bar, getElementAtEvent } from 'react-chartjs-2';
 import Zoom from 'chartjs-plugin-zoom';
 import 'chartjs-adapter-date-fns';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
+import { Button, Input } from '@mui/material';
 
 const TimelineDiv = styled.div`
   position: relative;
@@ -125,15 +126,15 @@ function TimelineChart({
     let maxDate = Date.now();
 
     timeData.forEach((entry) => {
-      const startDate = new Date(entry.startDate);
-      const endDate = new Date(`${entry.endDate} 23:59:59`);
+      const startDate = entry.startDate;
+      const endDate = entry.endDate;
       if (startDate < minDate) {
         minDate = startDate;
       }
       if (endDate > maxDate) {
         maxDate = endDate;
       }
-      data2.push([entry.startDate, `${entry.endDate} 23:59:59`]);
+      data2.push([entry.startDate, entry.endDate]);
       backgroundColor.push(entry.backgroundColor);
     });
 
