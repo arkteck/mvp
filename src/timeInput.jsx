@@ -12,7 +12,8 @@ const InputDiv = styled.div`
 
 const today = new Date();
 const todayString = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate()}`;
-const randomColor = () => (`hsl(${Math.floor(Math.random() * 360)}, ${Math.floor(Math.random() * 31) + 70}%, ${Math.floor(Math.random() * 31) + 40}%)`);
+const randomColor = () => (`hsl(${Math.floor(Math.random() * 360)}, ${Math.floor(Math.random() * 31) + 70}%, ${Math.floor(Math.random() * 31) + 30}%)`);
+let order = true;
 
 function TimeInput({
   timeData, setTimeData, labels, setLabels,
@@ -89,16 +90,30 @@ function TimeInput({
               temp.label = labels[i];
               combined.push(temp);
             });
-            combined.sort((a, b) => {
-              const start1 = new Date(a.startDate);
-              const start2 = new Date(b.startDate);
-              if (start1 === start2) {
-                const end1 = new Date(a.endDate);
-                const end2 = new Date(b.endDate);
-                return end1 - end2;
-              }
-              return start1 - start2;
-            });
+            if (order) {
+              combined.sort((a, b) => {
+                const start1 = new Date(a.startDate);
+                const start2 = new Date(b.startDate);
+                if (start1 - start2 === 0) {
+                  const end1 = new Date(a.endDate);
+                  const end2 = new Date(b.endDate);
+                  return end1 - end2;
+                }
+                return start1 - start2;
+              });
+            } else {
+              combined.sort((a, b) => {
+                const start1 = new Date(a.startDate);
+                const start2 = new Date(b.startDate);
+                if (start1 - start2 === 0) {
+                  const end1 = new Date(a.endDate);
+                  const end2 = new Date(b.endDate);
+                  return end2 - end1;
+                }
+                return start2 - start1;
+              });
+            }
+            order = !order;
             const newTimeData = [];
             const newLabels = [];
             combined.forEach((a) => {
