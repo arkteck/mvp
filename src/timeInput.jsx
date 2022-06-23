@@ -196,6 +196,35 @@ function TimeInput({
         <Button
           variant="outlined"
           onClick={() => {
+            const combined = [];
+            timeData.forEach((a, i) => {
+              const temp = a;
+              temp.label = labels[i];
+              combined.push(temp);
+            });
+            for (let i = combined.length - 1; i > 0; i--) {
+              const j = Math.floor(Math.random() * (i + 1));
+              [combined[i], combined[j]] = [combined[j], combined[i]];
+            }
+            const newTimeData = [];
+            const newLabels = [];
+            combined.forEach((a) => {
+              const newD = a;
+              newLabels.push(newD.label);
+              delete newD.label;
+              newTimeData.push(newD);
+            });
+            setLabels(newLabels);
+            setTimeData(newTimeData);
+          }}
+        >
+          Random Order
+        </Button>
+      </span>
+      <span>
+        <Button
+          variant="outlined"
+          onClick={() => {
             if (inputRef.current) {
               inputRef.current.click();
             }
