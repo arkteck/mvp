@@ -57,9 +57,9 @@ const options = {
         x: { min: 'original', max: 'original', minRange: 86400000 },
         y: { min: 'original', max: 'original' },
       },
-      pan: { enabled: true, mode: 'x', threshold: 10 },
+      pan: { enabled: true, mode: 'xy', threshold: 10 },
       zoom: {
-        mode: 'x',
+        mode: 'xy',
         wheel: {
           enabled: true,
         },
@@ -260,6 +260,48 @@ function TimelineChart({
               }}
             >
               Delete
+            </Button>
+          </div>
+          <div>
+            <Button
+              variant="outlined"
+              onClick={() => {
+                if (index > 0) {
+                  const newTimeData = [...timeData];
+                  const newLabels = [...labels];
+                  const movingTimeData = newTimeData[index];
+                  const movingLabel = newLabels[index];
+                  newTimeData.splice(index, 1);
+                  newLabels.splice(index, 1);
+                  newTimeData.splice(index - 1, 0, movingTimeData);
+                  newLabels.splice(index - 1, 0, movingLabel);
+                  setIndex(index - 1);
+                  setLabels(newLabels);
+                  setTimeData(newTimeData);
+                }
+              }}
+            >
+              Move Up
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={() => {
+                if (index < timeData.length - 1) {
+                  const newTimeData = [...timeData];
+                  const newLabels = [...labels];
+                  const movingTimeData = newTimeData[index];
+                  const movingLabel = newLabels[index];
+                  newTimeData.splice(index, 1);
+                  newLabels.splice(index, 1);
+                  newTimeData.splice(index + 1, 0, movingTimeData);
+                  newLabels.splice(index + 1, 0, movingLabel);
+                  setIndex(index + 1);
+                  setLabels(newLabels);
+                  setTimeData(newTimeData);
+                }
+              }}
+            >
+              Move Down
             </Button>
           </div>
           {/* <input
