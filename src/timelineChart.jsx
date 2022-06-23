@@ -25,9 +25,10 @@ const TimelineDiv = styled.div`
 `;
 
 const EditModal = styled.div`
-  position: absolute;
-  top: 50%;
+  position: fixed;
   left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   background-color: rgba(255, 255, 255, .8);
   box-shadow: 0px 0px 8px 8px rgba(255, 255, 255, .8);
   border-radius: 25px;
@@ -183,7 +184,7 @@ function TimelineChart({
       />
       {edit ? (
         <EditModal>
-          <span>
+          <div>
             <TextField
               variant="outlined"
               label="Event"
@@ -192,24 +193,24 @@ function TimelineChart({
               onChange={(e) => { setEditEvent(e.target.value); }}
               helperText={helper ? 'Please enter an event.' : ''}
             />
-          </span>
-          <span>
+          </div>
+          <div>
             <DatePicker
               label="Start Date"
               renderInput={(params) => <TextField {...params} />}
               value={editStartDate}
               onChange={(d) => { setEditStartDate(d); }}
             />
-          </span>
-          <span>
+          </div>
+          <div>
             <DatePicker
               label="End Date"
               renderInput={(params) => <TextField {...params} />}
               value={editEndDate}
               onChange={(d) => { setEditEndDate(d); }}
             />
-          </span>
-          <span>
+          </div>
+          <div>
             <Button
               variant="contained"
               onClick={() => {
@@ -232,7 +233,7 @@ function TimelineChart({
             >
               Submit
             </Button>
-          </span>
+          </div>
           {/* <input
             type="color"
             value={color}

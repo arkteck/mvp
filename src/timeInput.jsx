@@ -93,7 +93,7 @@ function TimeInput({
             }
           }}
         >
-          Submit
+          Add Event
         </Button>
       </span>
       <span>
