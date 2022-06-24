@@ -2,6 +2,7 @@
 .env
 bundle.*
 *.csv
+.DS_Store
 
 # Logs
 logs

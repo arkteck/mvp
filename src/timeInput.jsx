@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Button, TextField, Input } from '@mui/material';
+import { Button, TextField, Alert } from '@mui/material';
 import styled from '@emotion/styled';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import axios from 'axios';
@@ -24,11 +24,13 @@ function TimeInput({
   const [endDate, setEndDate] = useState(today);
   const [helper, setHelper] = useState(false);
   const [helper2, setHelper2] = useState(false);
+  const [upload, setUpload] = useState(false);
   const eventRef = useRef();
   const startRef = useRef();
   const inputRef = useRef();
 
   const handleUpload = (e) => {
+    setUpload(false);
     const fileObj = e.target.files && e.target.files[0];
     if (!fileObj) {
       return;
@@ -225,6 +227,7 @@ function TimeInput({
         <Button
           variant="outlined"
           onClick={() => {
+            setUpload(true);
             if (inputRef.current) {
               inputRef.current.click();
             }
@@ -232,6 +235,11 @@ function TimeInput({
         >
           Add from CSV
         </Button>
+        {upload ? (
+          <Alert variant="filled" severity="info" onClose={() => { setUpload(false); }}>
+            CSV should have headers &quot;event, startDate, endDate&quot;
+          </Alert>
+        ) : null}
       </span>
       <input
         style={{ display: 'none' }}
