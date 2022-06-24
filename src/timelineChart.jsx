@@ -30,8 +30,8 @@ const EditModal = styled.div`
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  background-color: rgba(255, 255, 255, .8);
-  box-shadow: 0px 0px 8px 8px rgba(255, 255, 255, .8);
+  background-color: rgba(255, 255, 255, 1);
+  box-shadow: 0px 0px 8px 8px rgba(255, 255, 255, 1);
   border-radius: 25px;
   padding: 15px;
   > * {
